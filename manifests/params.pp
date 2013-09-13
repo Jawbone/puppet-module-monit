@@ -54,6 +54,9 @@ class monit::params {
           $logrotate_source   = 'logrotate.ubuntu.erb'
           $service_has_status = true
           case $::lsbdistrelease {
+            '10.04': {
+              $default_conf_tpl = 'monit.default.conf.ubuntu.lucid.erb'
+            }
             '10.10': {
               $default_conf_tpl = 'monit.default.conf.ubuntu.maverick.erb'
             }
