@@ -10,6 +10,14 @@
 # [*delay*]     - How long to wait before actually performing any action
 # [*logfile*]   - What file for monit use for logging
 # [*mailserver] - Which mailserver to use
+# [*collector]  - mmonit server url
+# [*httpd_port*]      - Configures the httpd port to be used, by default 2812,
+# [*enable_ssl*]      - Enable ssl, false by default
+# [*pemfile*]         - Path to the pemfile
+# [*allow_self_cert*] - Allow self certification, by default set to false
+# [*only_localhost*]  - Allow connections from localhost only, by default true
+# [*allows*]          - Allowed connections, by default 'localhost'. Use an
+#                     - array for multiple connections.
 # === Examples
 #
 #  class { 'monit':
@@ -35,6 +43,13 @@ class monit (
   $logfile    = 'UNSET',
   $mailserver = 'localhost',
   $mailformat = undef,
+  $collector  = undef,
+  $httpd_port = '2812',
+  $enable_ssl = false,
+  $pemfile = undef,
+  $allow_self_cert = false,
+  $only_localhost = true,
+  $allows = 'localhost',
 ) {
   include monit::params
 
@@ -55,7 +70,7 @@ class monit (
     $use_delay = $delay
   }
 
-  $conf_include = "${monit::params::conf_dir}/*"
+  $conf_include = "${monit::params::conf_dir}/*.conf"
 
   if ($ensure == 'present') {
     $run_service = true

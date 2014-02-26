@@ -16,9 +16,9 @@
 ##
 ## Start Monit in the background (run as a daemon):
 #
-set daemon  <%= interval %> # check services at N-second intervals
+set daemon  <%= @interval %> # check services at N-second intervals
 <% if @use_delay.to_i != 0 %>
-   with start delay <%= use_delay  %> # delay the first check N*2
+   with start delay <%= @use_delay  %> # delay the first check N*2
 <% end %>
 #
 #
@@ -56,7 +56,7 @@ set logfile <%= @logfile_real %>
 #                backup.bar.baz port 10025,  # backup mailserver on port 10025
 #                localhost                   # fallback relay
 #
-set mailserver <%= mailserver %>
+set mailserver <%= @mailserver %>
 
 ## By default Monit will drop alert events if no mail servers are available. 
 ## If you want to keep the alerts for later delivery retry, you can use the 
@@ -74,6 +74,9 @@ set mailserver <%= mailserver %>
 ## see http://mmonit.com/).
 #
 # set mmonit http://monit:monit@192.168.1.10:8080/collector
+<% unless @collector.nil? -%>
+  set mmonit <%= @collector %>/collector
+<% end -%>
 #
 #
 ## Monit by default uses the following alert mail format:
@@ -118,9 +121,22 @@ set alert <%= @admin %>                       # receive all alerts
 ## services monitored and manage services from a web interface. See the
 ## Monit Wiki if you want to enable SSL for the web server. 
 #
-set httpd port 2812 and
+set httpd port <%= @httpd_port %> and
+<% if @enable_ssl == true -%>
+    SSL ENABLE
+<% end -%>
+<% unless @pemfile.nil? -%>
+    PEMFILE <%= @pemfile %>
+<% end -%>
+<% if @allow_self_cert == true -%>
+    ALLOWSELFCERTIFICATION
+<% end -%>
+<% if @only_localhost == true -%>
     use address localhost  # only accept connection from localhost
-    allow localhost        # allow localhost to connect to the server and
+<% end -%>
+<% Array(@allows).each do |allow| -%>
+    allow <%= allow %>
+<% end -%>
 #     allow admin:monit      # require user 'admin' with password 'monit'
 #     allow @monit           # allow users of group 'monit' to connect (rw)
 #     allow @users readonly  # allow users of group 'users' to connect readonly
