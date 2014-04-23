@@ -52,25 +52,31 @@ class monit::params {
         }
         'Ubuntu': {
           $logrotate_source   = 'logrotate.ubuntu.erb'
-          $service_has_status = false
+
           case $::lsbdistrelease {
             '10.04': {
               $default_conf_tpl = 'monit.default.conf.ubuntu.lucid.erb'
+              $service_has_status = false
             }
             '10.10': {
               $default_conf_tpl = 'monit.default.conf.ubuntu.maverick.erb'
+              $service_has_status = false
             }
             '12.04': {
               $default_conf_tpl = 'monit.default.conf.ubuntu.precise.erb'
+              $service_has_status = true
             }
             '12.10': {
               $default_conf_tpl = 'monit.default.conf.ubuntu.quantal.erb'
+              $service_has_status = true
             }
             '13.04': {
               $default_conf_tpl = 'monit.default.conf.ubuntu.raring.erb'
+              $service_has_status = true
             }
             '13.10': {
               $default_conf_tpl = 'monit.default.conf.ubuntu.saucy.erb'
+              $service_has_status = true
             }
             default: {
               fail("Unsupported lsbdistid:${::lsbdistid}/${::lsbdistrelease}")
