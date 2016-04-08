@@ -48,7 +48,11 @@ class monit::params {
             default:   { $service_has_status = true }
           }
           $logrotate_source = 'logrotate.debian.erb'
-          $default_conf_tpl = 'monit.default.conf.ubuntu.maverick.erb'
+          if $::lsbdistcodename == 'jessie' {
+            $default_conf_tpl = 'monit.default.conf.debian.jessie.erb'
+          } else {
+            $default_conf_tpl = 'monit.default.conf.ubuntu.maverick.erb'
+          }
         }
         'Ubuntu': {
           $logrotate_source   = 'logrotate.ubuntu.erb'
